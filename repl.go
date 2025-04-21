@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func startRepl() {
+func startRepl(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("> ")
@@ -19,18 +19,48 @@ func startRepl() {
 			continue
 		}
 
-		command := cleaned[0]
-		switch command {
-		case "help":
-			fmt.Println("Available commands:")
-			fmt.Println("  help - Show this help message")
-			fmt.Println("  exit - Exit the REPL")
-		case "exit":
-			fmt.Println("Exiting REPL...")
-			os.Exit(0)
-		default:
-			fmt.Println("Unknown command:", command)
+		commandName := cleaned[0]
+		availableCommands := getCommands()
+		command, ok := availableCommands[commandName]
+		if !ok {
+			fmt.Println("Unknown command:", commandName)
+			continue
 		}
+		err := command.callback(cfg)
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
+	}
+}
+
+type cliCommand struct {
+	name        string
+	description string
+	callback    func(*config) error
+}
+
+func getCommands() map[string]cliCommand {
+	return map[string]cliCommand{
+		"help": {
+			name:        "help",
+			description: "Show this help message",
+			callback:    callbackHelp,
+		},
+		"exit": {
+			name:        "exit",
+			description: "Exit the REPL",
+			callback:    callbackExit,
+		},
+		"map": {
+			name:        "map",
+			description: "Show location areas",
+			callback:    callbackMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Show previous location areas",
+			callback:    callbackMapb,
+		},
 	}
 }
 
