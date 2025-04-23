@@ -23,7 +23,7 @@ func callbackCatch(cfg *config, args ...string) error {
 		return fmt.Errorf("Failed to Catch! %s", pokemonName)
 	}
 
-	fmt.Println("Caught!")
+	cfg.caughtPokemon[pokemonName] = resp
 	fmt.Println("Congratulations!")
 	fmt.Println("You have a new Pokemon!")
 	fmt.Println("Enjoy your new companion!")
