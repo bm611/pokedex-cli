@@ -11,7 +11,6 @@ type config struct {
 	// pointer because it can be nil
 	nextLocationAreaURL *string
 	prevLocationAreaURL *string
-	
 }
 
 func main() {
@@ -21,5 +20,4 @@ func main() {
 		prevLocationAreaURL: nil,
 	}
 	startRepl(&cfg)
-
 }

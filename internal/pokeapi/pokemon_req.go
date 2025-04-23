@@ -8,27 +8,20 @@ import (
 )
 
 func (c *Client) GetPokemon(pokemonName string) (Pokemon, error) {
-	endpoint := "pokemon/" + pokemonName
-	fullURL := baseURL + endpoint
+	fullURL := baseURL + "pokemon/" + pokemonName
+	var pokemon Pokemon
 
 	// check the cache
-	dat, ok := c.cache.Get(fullURL)
-	if ok {
+	if data, ok := c.cache.Get(fullURL); ok {
 		fmt.Println("Cache hit")
-		pokemon := Pokemon{}
-		err := json.Unmarshal(dat, &pokemon)
-		if err != nil {
+		if err := json.Unmarshal(data, &pokemon); err != nil {
 			return Pokemon{}, err
 		}
 		return pokemon, nil
 	}
 
-	req, err := http.NewRequest("GET", fullURL, nil)
-	if err != nil {
-		return Pokemon{}, err
-	}
-
-	resp, err := c.httpClient.Do(req)
+	// Make the API request
+	resp, err := c.httpClient.Get(fullURL)
 	if err != nil {
 		return Pokemon{}, err
 	}
@@ -43,9 +36,7 @@ func (c *Client) GetPokemon(pokemonName string) (Pokemon, error) {
 		return Pokemon{}, err
 	}
 
-	pokemon := Pokemon{}
-	err = json.Unmarshal(data, &pokemon)
-	if err != nil {
+	if err := json.Unmarshal(data, &pokemon); err != nil {
 		return Pokemon{}, err
 	}
 
