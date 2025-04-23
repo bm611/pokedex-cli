@@ -21,7 +21,7 @@ A command-line interface Pokedex application that interacts with the [PokeAPI](h
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/pokedex-cli.git
+git clone https://github.com/bm611/pokedex-cli.git
 ```
 
 2. Navigate to the project directory:
